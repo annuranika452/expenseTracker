@@ -11,3 +11,5 @@ A full-stack OCR-powered expense tracking app using Node.js, Python, PostgreSQL,
 - Database: PostgreSQL (via Docker)
 - Frontend: HTML, JS, Chart.js
 - Hosting: GCP (optional)
+
+check
