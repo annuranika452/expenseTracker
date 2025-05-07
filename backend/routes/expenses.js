@@ -8,9 +8,11 @@ router.get("/", async (req, res) => {
     const result = await pool.query("SELECT * FROM expenses ORDER BY date DESC");
     res.json(result.rows);
   } catch (err) {
-    res.status(500).send("Error fetching expenses");
+    console.error("DB Error:", err.message);         // log to backend logs
+    res.status(500).json({ error: err.message });     // show error to client
   }
 });
+
 
 router.post("/", async (req, res) => {
   const { title, amount, category, date } = req.body;

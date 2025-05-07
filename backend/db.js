@@ -3,14 +3,15 @@ const { Pool } = require("pg");
 require("dotenv").config();
 
 const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "postgres",
-  password: "",         // Fill if you set one
-  port: 5433,           // Match Docker's mapped port
+  user: process.env.DB_USER || "postgres",
+  host: process.env.DB_HOST || "db",        // ← use Docker service name
+  database: process.env.DB_NAME || "expenses",
+  password: process.env.DB_PASSWORD || "anika",
+  port: parseInt(process.env.DB_PORT || "5432", 10),  // Container listens on 5432
 });
 
 module.exports = pool;
+
 
 
 
