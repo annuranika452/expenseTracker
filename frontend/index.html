@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>📊 Smart Expense Tracker</h1>
+
+  <section>
+    <h2>Expenses</h2>
+    <table id="expense-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Amount</th>
+          <th>Category</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Category Breakdown</h2>
+    <canvas id="expense-chart" width="400" height="200"></canvas>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
