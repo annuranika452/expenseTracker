@@ -10,6 +10,17 @@
   <h1>📊 Smart Expense Tracker</h1>
 
   <section>
+    <h2>Add New Expense</h2>
+    <form id="expense-form">
+      <input type="text" id="title" placeholder="Title" required />
+      <input type="number" id="amount" placeholder="Amount" required />
+      <input type="text" id="category" placeholder="Category" required />
+      <input type="date" id="date" required />
+      <button type="submit">Add Expense</button>
+    </form>
+  </section>
+
+  <section>
     <h2>Expenses</h2>
     <table id="expense-table">
       <thead>

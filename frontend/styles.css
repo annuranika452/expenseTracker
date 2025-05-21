@@ -23,3 +23,15 @@ th, td {
 th {
   background-color: #f0f0f0;
 }
+
+form {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+form input, form button {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
