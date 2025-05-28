@@ -1,6 +1,6 @@
 let chartInstance = null;
 
-const API_URL = "http://localhost:5000/api/expenses";
+const API_URL = "http://localhost:5050/api/expenses";
 
 async function fetchExpenses() {
   const res = await fetch(API_URL);
@@ -67,7 +67,7 @@ document.getElementById("expense-form").addEventListener("submit", async (e) => 
   const expense = { title, amount, category, date };
 
   try {
-    const res = await fetch("http://localhost:5000/api/expenses", {
+    const res = await fetch("http://localhost:5050/api/expenses", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(expense),
