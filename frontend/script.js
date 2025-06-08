@@ -83,3 +83,21 @@ document.getElementById("expense-form").addEventListener("submit", async (e) => 
     alert("Error: " + err.message);
   }
 });
+
+document.getElementById("upload-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const fileInput = document.getElementById("receipt");
+  const formData = new FormData();
+  formData.append("image", fileInput.files[0]);
+
+  const res = await fetch("http://localhost:5050/api/ocr", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await res.json();
+  console.log("OCR Result:", data);
+
+});
+

@@ -14,5 +14,8 @@ app.get("/", (req, res) => {
   res.send("Backend is up!");
 });
 
+const ocrRoute = require('./routes/ocr');
+app.use('/api/ocr', ocrRoute);
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
