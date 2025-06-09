@@ -9,11 +9,17 @@
 <body>
   <h1>📊 Smart Expense Tracker</h1>
 
+  <h2>Upload Receipt</h2>
+<form id="upload-form">
+  <input type="file" id="receipt" accept="image/*" required />
+  <button type="submit">Extract</button>
+</form>
+
   <section>
     <h2>Add New Expense</h2>
     <form id="expense-form">
       <input type="text" id="title" placeholder="Title" required />
-      <input type="number" id="amount" placeholder="Amount" required />
+      <input type="number" id="amount" step="0.01" min="0" />
       <input type="text" id="category" placeholder="Category" required />
       <input type="date" id="date" required />
       <button type="submit">Add Expense</button>
@@ -40,11 +46,7 @@
     <canvas id="expense-chart" width="400" height="200"></canvas>
   </section>
 
-  <h2>Upload Receipt</h2>
-<form id="upload-form">
-  <input type="file" id="receipt" accept="image/*" required />
-  <button type="submit">Extract</button>
-</form>
+
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>

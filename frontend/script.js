@@ -21,6 +21,7 @@ function renderTable(expenses) {
       <td>$${parseFloat(expense.amount).toFixed(2)}</td>
       <td>${expense.category}</td>
       <td>${new Date(expense.date).toLocaleDateString()}</td>
+      <td><button data-id="${expense.id}" class="delete-btn">🗑️</button></td>
     `;
     tbody.appendChild(tr);
   });
@@ -99,5 +100,40 @@ document.getElementById("upload-form").addEventListener("submit", async (e) => {
   const data = await res.json();
   console.log("OCR Result:", data);
 
+document.getElementById("title").value = data.title || "";
+document.getElementById("amount").value = data.amount || "";
+document.getElementById("category").value = data.category || "";
+document.getElementById("date").value = data.date || "";
+
 });
+
+document.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("delete-btn")) {
+    const rawId = e.target.getAttribute("data-id");
+    console.log("Clicked delete button. Raw ID:", rawId);
+
+    const id = Number(rawId);
+    if (!id) {
+      alert("Invalid ID. Cannot delete.");
+      return;
+    }
+
+    if (confirm("Are you sure you want to delete this expense?")) {
+      try {
+        const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+        if (res.ok) {
+          console.log("Deleted successfully");
+          fetchExpenses(); // Refresh UI
+        } else {
+          console.error("Delete failed", res.status);
+          alert("Delete failed: " + res.status);
+        }
+      } catch (err) {
+        console.error("Error deleting:", err);
+        alert("Error deleting: " + err.message);
+      }
+    }
+  }
+});
+
 

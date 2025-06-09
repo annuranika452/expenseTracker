@@ -8,11 +8,10 @@ router.get("/", async (req, res) => {
     const result = await pool.query("SELECT * FROM expenses ORDER BY date DESC");
     res.json(result.rows);
   } catch (err) {
-    console.error("DB Error:", err.message);         // log to backend logs
-    res.status(500).json({ error: err.message });     // show error to client
+    console.error("DB Error:", err.message);
+    res.status(500).json({ error: err.message });
   }
 });
-
 
 router.post("/", async (req, res) => {
   const { title, amount, category, date } = req.body;
@@ -27,5 +26,21 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  console.log("Delete request for ID:", id);
+
+  try {
+    const result = await pool.query("DELETE FROM expenses WHERE id = $1", [id]);
+    console.log("Rows deleted:", result.rowCount);
+    res.status(204).send();
+  } catch (err) {
+    console.error("Delete error:", err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
+
+
 
