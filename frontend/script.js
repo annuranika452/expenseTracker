@@ -136,4 +136,19 @@ document.addEventListener("click", async (e) => {
   }
 });
 
+async function fetchExpenses() {
+  document.getElementById("loading").style.display = "block";
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    renderTable(data);
+    renderChart(data);
+  } catch (err) {
+    alert("Error fetching data.");
+  } finally {
+    document.getElementById("loading").style.display = "none";
+  }
+}
+
+
 
