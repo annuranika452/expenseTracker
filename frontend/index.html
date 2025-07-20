@@ -1,37 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Smart Expense Tracker</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Expense Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f8f9fa;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+      color: #2c3e50;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    h2 {
+      margin-bottom: 15px;
+      color: #3498db;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    
+    input, button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    
+    th {
+      background-color: #3498db;
+      color: white;
+    }
+    
+    .delete-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 15px;
+      background: #2ecc71;
+      color: white;
+      border-radius: 5px;
+      display: none;
+    }
+    
+    .loading {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.8);
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .chart-container {
+      height: 300px;
+      margin-top: 20px;
+    }
+    
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 15px;
+      gap: 5px;
+    }
+    
+    .pagination button {
+      width: auto;
+      padding: 5px 10px;
+      min-width: 30px;
+    }
+    
+    .pagination button.active {
+      background: #2c3e50;
+    }
+  </style>
 </head>
 <body>
-  <div id="loading" style="display:none; text-align:center; padding:10px; font-weight:bold;">⏳ Loading...</div>
   <div class="container">
-    <h1>📊 Smart Expense Tracker</h1>
+    <h1><i class="fas fa-wallet"></i> Expense Tracker</h1>
 
-    <section class="card">
-      <h2>Add Expense</h2>
+    <div class="card">
+      <h2><i class="fas fa-plus"></i> Add Expense</h2>
       <form id="expense-form">
-        <input type="text" id="title" placeholder="Title" required />
-        <input type="number" step="0.01" id="amount" placeholder="Amount" required />
-        <input type="text" id="category" placeholder="Category" required />
-        <input type="date" id="date" required />
-        <button type="submit">➕ Add Expense</button>
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" required>
+        </div>
+        <div class="form-group">
+          <label for="amount">Amount ($)</label>
+          <input type="number" step="0.01" id="amount" required>
+        </div>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <input type="text" id="category" required>
+        </div>
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="date" id="date" required>
+        </div>
+        <button type="submit">Add Expense</button>
       </form>
-    </section>
+    </div>
 
-    <section class="card">
-      <h2>Upload Receipt</h2>
+    <div class="card">
+      <h2><i class="fas fa-receipt"></i> Upload Receipt</h2>
       <form id="upload-form">
-        <input type="file" id="receipt" accept="image/*" required />
-        <button type="submit">📷 Extract from Receipt</button>
+        <div class="form-group">
+          <label>Receipt Image</label>
+          <input type="file" id="receipt" accept="image/*" required>
+        </div>
+        <button type="submit">Process Receipt</button>
       </form>
-    </section>
+    </div>
 
-    <section class="card">
-      <h2>Expenses</h2>
+    <div class="card">
+      <h2><i class="fas fa-list"></i> Expenses</h2>
       <table id="expense-table">
         <thead>
           <tr>
@@ -42,17 +194,329 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody id="expense-list">
+          <!-- Expenses will appear here -->
+        </tbody>
       </table>
-    </section>
+      <div class="pagination" id="pagination-controls">
+        <!-- Pagination buttons will appear here -->
+      </div>
+    </div>
 
-    <section class="card">
-      <h2>Category Breakdown</h2>
-      <canvas id="expense-chart" width="300" height="200"></canvas>
-    </section>
+    <div class="card">
+      <h2><i class="fas fa-chart-pie"></i> Spending by Category</h2>
+      <div class="chart-container">
+        <canvas id="pie-chart"></canvas>
+      </div>
+    </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="script.js"></script>
+  <div class="notification" id="notification">
+    <span id="notification-message"></span>
+  </div>
+
+  <div class="loading" id="loading">
+    <div>Processing receipt...</div>
+  </div>
+
+  <button id="logout-btn">Logout</button>
+
+
+  <script>
+    let expenses = [];
+    let nextId = 1;
+    let pieChart = null;
+    let currentPage = 1;
+    const itemsPerPage = 5;
+
+    // Sample receipt data with dates
+    const receiptExamples = [
+      { title: "Grocery Store", amount: 65.30, category: "Food", date: getRecentDate(2) },
+      { title: "Gas Station", amount: 45.00, category: "Transport", date: getRecentDate(1) },
+      { title: "Restaurant", amount: 32.50, category: "Dining", date: getRecentDate(0) },
+      { title: "Book Store", amount: 28.75, category: "Education", date: getRecentDate(3) },
+      { title: "Clothing Store", amount: 75.40, category: "Shopping", date: getRecentDate(4) }
+    ];
+
+    // Helper function to get recent dates
+    function getRecentDate(daysAgo) {
+      const date = new Date();
+      date.setDate(date.getDate() - daysAgo);
+      return date.toISOString().split('T')[0];
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load any saved expenses
+      loadExpenses();
+      
+      // Form submission
+      document.getElementById('expense-form').addEventListener('submit', addExpense);
+      document.getElementById('upload-form').addEventListener('submit', processReceipt);
+      
+      // Initialize chart
+      updatePieChart();
+    });
+
+    function addExpense(e) {
+      e.preventDefault();
+      
+      const title = document.getElementById('title').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      const category = document.getElementById('category').value;
+      const date = document.getElementById('date').value;
+      
+      if (!title || isNaN(amount)) {
+        showNotification('Please fill all fields', true);
+        return;
+      }
+      
+      const expense = {
+        id: nextId++,
+        title,
+        amount,
+        category,
+        date
+      };
+      
+      expenses.unshift(expense); // Add to beginning to show newest first
+      saveExpenses();
+      renderExpenses();
+      updatePieChart();
+      
+      // Reset form
+      e.target.reset();
+      
+      showNotification('Expense added');
+    }
+
+    function processReceipt(e) {
+      e.preventDefault();
+      
+      const fileInput = document.getElementById('receipt');
+      if (!fileInput.files.length) {
+        showNotification('Please select a receipt', true);
+        return;
+      }
+      
+      // Show loading
+      document.getElementById('loading').style.display = 'flex';
+      
+      // Simulate processing delay
+      setTimeout(() => {
+        // Hide loading
+        document.getElementById('loading').style.display = 'none';
+        
+        // Get a random receipt example (with date)
+        const receipt = receiptExamples[Math.floor(Math.random() * receiptExamples.length)];
+        
+        // Fill the form
+        document.getElementById('title').value = receipt.title;
+        document.getElementById('amount').value = receipt.amount;
+        document.getElementById('category').value = receipt.category;
+        document.getElementById('date').value = receipt.date;
+        
+        // Reset file input
+        fileInput.value = '';
+        
+        showNotification('Receipt processed');
+      }, 1500);
+    }
+
+    function renderExpenses() {
+      const tbody = document.getElementById('expense-list');
+      tbody.innerHTML = '';
+      
+      // Calculate pagination
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const paginatedExpenses = expenses.slice(startIndex, endIndex);
+      
+      if (paginatedExpenses.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5">No expenses found</td></tr>';
+        renderPagination();
+        return;
+      }
+      
+      // Add expenses to the table
+      paginatedExpenses.forEach(expense => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${expense.title}</td>
+          <td>$${expense.amount.toFixed(2)}</td>
+          <td>${expense.category}</td>
+          <td>${expense.date}</td>
+          <td><button class="delete-btn" data-id="${expense.id}">Delete</button></td>
+        `;
+        
+        tr.querySelector('.delete-btn').addEventListener('click', () => deleteExpense(expense.id));
+        tbody.appendChild(tr);
+      });
+      
+      renderPagination();
+    }
+
+    function renderPagination() {
+      const paginationDiv = document.getElementById('pagination-controls');
+      paginationDiv.innerHTML = '';
+      
+      const totalPages = Math.ceil(expenses.length / itemsPerPage);
+      
+      if (totalPages <= 1) return;
+      
+      // Previous button
+      const prevButton = document.createElement('button');
+      prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+      prevButton.disabled = currentPage === 1;
+      prevButton.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderExpenses();
+        }
+      });
+      paginationDiv.appendChild(prevButton);
+      
+      // Page numbers
+      const maxVisiblePages = 5;
+      let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+      let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+      
+      // Adjust if we're at the end
+      if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i;
+        pageButton.classList.toggle('active', i === currentPage);
+        pageButton.addEventListener('click', () => {
+          currentPage = i;
+          renderExpenses();
+        });
+        paginationDiv.appendChild(pageButton);
+      }
+      
+      // Next button
+      const nextButton = document.createElement('button');
+      nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+      nextButton.disabled = currentPage === totalPages;
+      nextButton.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderExpenses();
+        }
+      });
+      paginationDiv.appendChild(nextButton);
+    }
+
+    function deleteExpense(id) {
+      if (confirm('Delete this expense?')) {
+        expenses = expenses.filter(exp => exp.id !== id);
+        saveExpenses();
+        
+        // Adjust current page if needed
+        const totalPages = Math.ceil(expenses.length / itemsPerPage);
+        if (currentPage > totalPages && totalPages > 0) {
+          currentPage = totalPages;
+        }
+        
+        renderExpenses();
+        updatePieChart();
+        showNotification('Expense deleted');
+      }
+    }
+
+    function updatePieChart() {
+      const ctx = document.getElementById('pie-chart').getContext('2d');
+      
+      // Calculate category totals
+      const categories = {};
+      expenses.forEach(expense => {
+        if (!categories[expense.category]) {
+          categories[expense.category] = 0;
+        }
+        categories[expense.category] += expense.amount;
+      });
+      
+      // Prepare chart data
+      const labels = Object.keys(categories);
+      const data = Object.values(categories);
+      
+      // Generate colors for each category
+      const backgroundColors = labels.map((_, i) => {
+        const hue = (i * 137.5) % 360; // Golden angle for distinct colors
+        return `hsla(${hue}, 70%, 60%, 0.7)`;
+      });
+      
+      // Destroy existing chart if it exists
+      if (pieChart) {
+        pieChart.destroy();
+      }
+      
+      // Create new chart
+      pieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: data,
+            backgroundColor: backgroundColors,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.raw || 0;
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = Math.round((value / total) * 100);
+                  return `${label}: $${value.toFixed(2)} (${percentage}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      notification.style.backgroundColor = isError ? '#e74c3c' : '#2ecc71';
+      document.getElementById('notification-message').textContent = message;
+      notification.style.display = 'block';
+      
+      setTimeout(() => {
+        notification.style.display = 'none';
+      }, 3000);
+    }
+
+    function saveExpenses() {
+      localStorage.setItem('expenses', JSON.stringify(expenses));
+      localStorage.setItem('nextId', nextId);
+    }
+
+    function loadExpenses() {
+      const saved = localStorage.getItem('expenses');
+      if (saved) {
+        expenses = JSON.parse(saved);
+        nextId = parseInt(localStorage.getItem('nextId')) || expenses.length + 1;
+        renderExpenses();
+      }
+    }
+
+  document.getElementById("logout-btn")?.addEventListener("click", () => {
+  localStorage.removeItem("token");
+  window.location.href = "login.html";
+});
+
+  </script>
 </body>
 </html>

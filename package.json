@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "test": "NODE_ENV=test jest"
+    "test": "npm run test:unit && npm run test:whitebox && npm run test:api && npm run test:gui",
+  "test:unit": "NODE_ENV=test jest tests/unit --runInBand",
+  "test:whitebox": "NODE_ENV=test jest backend/tests/whitebox --runInBand",
+  "test:api": "NODE_ENV=test jest tests/app.test.js --runInBand",
+  "test:gui": "npx playwright test"
   },
   "keywords": [],
   "author": "",
@@ -22,9 +26,11 @@
     "pg": "^8.16.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.54.1",
     "jest": "^29.7.0",
     "jest-environment-node": "^29.7.0",
+    "playwright": "^1.54.1",
+    "serve": "^14.2.4",
     "supertest": "^7.1.3"
   }
 }
-
